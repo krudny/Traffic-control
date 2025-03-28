@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Getter
@@ -18,8 +19,11 @@ public class Lane {
         this.vehicles = new ArrayDeque<Vehicle>();
     }
 
-    public Vehicle getNextVehicle() {
-        return vehicles.getFirst();
+    public Optional<Vehicle> getNextVehicle() {
+        if (vehicles.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(vehicles.getFirst());
     }
 
     public void addVehicle(Vehicle newVehicle) {

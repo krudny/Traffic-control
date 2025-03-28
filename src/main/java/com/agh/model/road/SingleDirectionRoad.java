@@ -4,7 +4,7 @@ import com.agh.model.trafficLight.TrafficLight;
 import lombok.Getter;
 
 @Getter
-public class SingleDirectionRoad {
+public class SingleDirectionRoad implements IRoad {
     private final Lane inboundLane;
     private final Lane outboundLane;
     private final TrafficLight trafficLight;

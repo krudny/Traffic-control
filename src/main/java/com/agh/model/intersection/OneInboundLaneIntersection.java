@@ -1,13 +1,16 @@
 package com.agh.model.intersection;
 
+import com.agh.model.road.IRoad;
 import com.agh.model.road.RoadDirection;
 import com.agh.model.road.SingleDirectionRoad;
 import com.agh.model.trafficLight.TrafficLight;
 import com.agh.model.trafficLight.TrafficLightSignal;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
-public class OneInboundLaneIntersection {
+public class OneInboundLaneIntersection implements IIntersection {
     private final SingleDirectionRoad northRoad;
     private final SingleDirectionRoad southRoad;
     private final SingleDirectionRoad westRoad;
@@ -25,5 +28,16 @@ public class OneInboundLaneIntersection {
         this.eastRoad = new SingleDirectionRoad(RoadDirection.EAST, eastTrafficLight);
     }
 
+    public List<IRoad> getRoads() {
+        return List.of(northRoad, southRoad, eastRoad, westRoad);
+    }
 
+    public IRoad getRoadByDirection(RoadDirection direction) {
+        return switch (direction) {
+            case NORTH -> northRoad;
+            case SOUTH -> southRoad;
+            case WEST -> westRoad;
+            case EAST -> eastRoad;
+        };
+    }
 }

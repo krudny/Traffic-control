@@ -1,7 +1,11 @@
 package com.agh.model.vehicle;
 
 import com.agh.model.road.RoadDirection;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Vehicle {
     private final Integer id;
     private final Route route;

@@ -4,7 +4,9 @@ import com.agh.model.road.RoadDirection;
 import com.agh.model.road.SingleDirectionRoad;
 import com.agh.model.trafficLight.TrafficLight;
 import com.agh.model.trafficLight.TrafficLightSignal;
+import lombok.Getter;
 
+@Getter
 public class OneInboundLaneIntersection {
     private final SingleDirectionRoad northRoad;
     private final SingleDirectionRoad southRoad;
@@ -22,4 +24,6 @@ public class OneInboundLaneIntersection {
         this.westRoad = new SingleDirectionRoad(RoadDirection.WEST, westTrafficLight);
         this.eastRoad = new SingleDirectionRoad(RoadDirection.EAST, eastTrafficLight);
     }
+
+
 }

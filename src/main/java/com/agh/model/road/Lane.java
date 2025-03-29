@@ -26,7 +26,19 @@ public class Lane {
         return Optional.of(vehicles.getFirst());
     }
 
+    public Optional<Vehicle> removeNextVehicle() {
+        if (vehicles.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(vehicles.removeFirst());
+    }
+
     public void addVehicle(Vehicle newVehicle) {
         vehicles.add(newVehicle);
+    }
+
+    @Override
+    public String toString() {
+        return vehicles.toString();
     }
 }

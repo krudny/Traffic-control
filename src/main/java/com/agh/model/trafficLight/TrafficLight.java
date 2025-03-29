@@ -19,8 +19,7 @@ public class TrafficLight implements ITrafficLight {
     public TrafficLightSignal changeState() {
         this.currentState = switch (currentState) {
             case TrafficLightSignal.RED -> TrafficLightSignal.GREEN;
-            case TrafficLightSignal.YELLOW -> TrafficLightSignal.RED;
-            case TrafficLightSignal.GREEN -> TrafficLightSignal.YELLOW;
+            case TrafficLightSignal.GREEN -> TrafficLightSignal.RED;
         };
 
         return currentState;

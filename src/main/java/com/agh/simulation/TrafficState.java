@@ -13,18 +13,18 @@ import java.util.Map;
 
 @Getter
 public class TrafficState {
-    private final Map<RoadDirection, List<Vehicle>> waitingVehicles;
+    private final Map<RoadDirection, List<Vehicle>> vehiclesToMove;
     private final Map<RoadDirection, TrafficLightSignal> lightStates;
 
     public TrafficState() {
-        waitingVehicles = new HashMap<>();
+        vehiclesToMove = new HashMap<>();
         lightStates = new HashMap<>();
     }
 
     public void addWaitingVehicle(Vehicle vehicle) {
-        List<Vehicle> vehicles = waitingVehicles.getOrDefault(vehicle.getRoute().sourceDirection(), new ArrayList<Vehicle>());
+        List<Vehicle> vehicles = vehiclesToMove.getOrDefault(vehicle.getRoute().sourceDirection(), new ArrayList<Vehicle>());
         vehicles.add(vehicle);
-        waitingVehicles.put(vehicle.getRoute().sourceDirection(), vehicles);
+        vehiclesToMove.put(vehicle.getRoute().sourceDirection(), vehicles);
     }
 
     public void addLightStateForRoad(IRoad road) {

@@ -3,7 +3,9 @@ package com.agh.simulation;
 import com.agh.model.intersection.IIntersection;
 import com.agh.model.road.IRoad;
 import com.agh.model.road.RoadDirection;
+import com.agh.model.trafficLight.TrafficLight;
 import com.agh.model.trafficLight.TrafficLightSignal;
+import com.agh.model.trafficLight.strategies.TrafficLightStrategy;
 import com.agh.model.vehicle.Vehicle;
 import com.agh.model.vehicle.VehicleStatus;
 import lombok.AllArgsConstructor;
@@ -20,10 +22,12 @@ import java.util.List;
 @Getter
 public class SimulationManager {
     private final IIntersection intersection;
+    private final TrafficLightStrategy strategy;
     private static final Logger LOGGER = LogManager.getLogger();
 
 
     public void nextStep() {
+        strategy.toggleLights();
         TrafficState trafficState = new TrafficState();
         ArrayList<Vehicle> vehiclesToLeave = new ArrayList<>();
         setLights(trafficState);

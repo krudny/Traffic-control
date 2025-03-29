@@ -22,70 +22,63 @@ public class SimulationManager {
     private final IIntersection intersection;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public void init() {
-        nextStep();
-//        intersection.getRoads().forEach(road -> road.getTrafficLight().changeState());
-        nextStep();
-//        intersection.getRoads().forEach(road -> road.getTrafficLight().changeState());
-        nextStep();
-    }
 
     public void nextStep() {
-        LOGGER.info("Sim step");
         TrafficState trafficState = new TrafficState();
+        ArrayList<Vehicle> vehiclesToLeave = new ArrayList<>();
+        setLights(trafficState);
+        selectFirstVehicles(trafficState);
+        selectWhichAreGoingToMove(trafficState, vehiclesToLeave);
+        moveVehicles(vehiclesToLeave);
+    }
 
-        // check lights
-        intersection.getRoads().forEach(trafficState::addLightStateForRoad);
 
-        // select first vehicles on every line and set their status
+    private void setLights(TrafficState state) {
+        intersection.getRoads().forEach(state::addLightStateForRoad);
+    }
+
+    private void selectFirstVehicles(TrafficState state) {
         List<IRoad> roads = intersection.getRoads();
         for (IRoad road : roads) {
             road.getInboundLane().getNextVehicle().ifPresent(vehicle -> {
-                vehicle.setStatus(VehicleStatus.APPROACHING_INTERSECTION);
-                trafficState.addWaitingVehicle(vehicle);
-                LOGGER.info("Vehicle approaching: {}", vehicle);
+                if (road.getTrafficLight().getCurrentState() == TrafficLightSignal.RED) {
+                    vehicle.setStatus(VehicleStatus.STOPPED_AT_RED_LIGHT);
+                } else {
+                    vehicle.setStatus(VehicleStatus.APPROACHING_INTERSECTION);
+                    state.addWaitingVehicle(vehicle);
+                }
+                LOGGER.info("{}", vehicle);
             });
         }
-
-        makeStep(trafficState);
-        LOGGER.info("AFTER STEP");
-        for(IRoad road : roads) {
-            LOGGER.info("ROAD: {}", road.getInboundLane());
-        }
-
     }
 
-    public void makeStep(TrafficState trafficState) {
-        ArrayList<Vehicle> to_leave = new ArrayList<>();
-        LOGGER.info(trafficState.getVehiclesToMove());
-        LOGGER.info(trafficState.getLightStates());
-
-        // check which vehicles are going to move somehow
-        trafficState.getVehiclesToMove().forEach((direction, vehicles) -> {
+    private void selectWhichAreGoingToMove(TrafficState state, ArrayList<Vehicle> vehiclesToLeave) {
+        state.getVehiclesToMove().forEach((direction, vehicles) -> {
             vehicles.forEach(vehicle -> {
-                if (trafficState.getLightStates().get(direction) == TrafficLightSignal.GREEN) {
+                if (state.getLightStates().get(direction) == TrafficLightSignal.GREEN) {
                     vehicle.setStatus(VehicleStatus.IN_INTERSECTION);
-                    LOGGER.info("Vehicle in intersection: {}", vehicle);
-                    to_leave.add(vehicle);
+                    vehiclesToLeave.add(vehicle);
+                    LOGGER.info("{}", vehicle);
+                } else {
+                    vehicle.setStatus(VehicleStatus.STOPPED_AT_RED_LIGHT);
                 }
             });
         });
+    }
 
-        // move those vehicles
-        while (!to_leave.isEmpty()) {
+    private void moveVehicles(ArrayList<Vehicle> vehiclesToLeave) {
+        while (!vehiclesToLeave.isEmpty()) {
             List<Vehicle> vehiclesToRemove = new ArrayList<>();
 
-            Iterator<Vehicle> iterator = intersection.getMostPriority(to_leave).iterator();
-            while (iterator.hasNext()) {
-                Vehicle vehicle = iterator.next();
+            for (Vehicle vehicle : intersection.getMostPriority(vehiclesToLeave)) {
                 vehicle.setStatus(VehicleStatus.LEAVING_INTERSECTION);
                 RoadDirection sourceDirection = vehicle.getRoute().sourceDirection();
                 intersection.getRoadByDirection(sourceDirection).getInboundLane().removeNextVehicle();
                 vehiclesToRemove.add(vehicle);
-                LOGGER.info("Removed: {}", vehicle);
+                LOGGER.info("{}", vehicle);
             }
 
-            to_leave.removeAll(vehiclesToRemove);
+            vehiclesToLeave.removeAll(vehiclesToRemove);
         }
     }
 }

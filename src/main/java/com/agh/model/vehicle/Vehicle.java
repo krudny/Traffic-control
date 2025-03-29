@@ -20,10 +20,6 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "Vehicle{" +
-                "id=" + id +
-                ", route=" + route +
-                ", status=" + status +
-                '}';
+        return String.format("Vehicle %s with route %s -> %s is %s", id, route.sourceDirection(), route.destinationDirection(), status);
     }
 }

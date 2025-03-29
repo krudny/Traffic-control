@@ -5,11 +5,15 @@ import com.agh.model.road.RoadDirection;
 import com.agh.model.road.SingleDirectionRoad;
 import com.agh.model.trafficLight.TrafficLight;
 import com.agh.model.trafficLight.TrafficLightSignal;
+import com.agh.model.vehicle.Route;
 import com.agh.model.vehicle.Vehicle;
 import com.agh.model.vehicle.VehicleStatus;
 import lombok.Getter;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class OneInboundLaneIntersection implements IIntersection {
@@ -51,9 +55,43 @@ public class OneInboundLaneIntersection implements IIntersection {
         RoadDirection direction1 = vehicles.getFirst().getRoute().destinationDirection();
         RoadDirection direction2 = vehicles.getLast().getRoute().destinationDirection();
 
-        return (direction1 == RoadDirection.NORTH && direction2 == RoadDirection.EAST) ||
-                (direction1 == RoadDirection.WEST && direction2 == RoadDirection.SOUTH) ||
-                (direction1 == RoadDirection.EAST && direction2 == RoadDirection.SOUTH) ||
-                (direction1 == RoadDirection.NORTH && direction2 == RoadDirection.WEST);
+        return Set.of(
+                Set.of(RoadDirection.NORTH, RoadDirection.EAST),
+                Set.of(RoadDirection.WEST, RoadDirection.SOUTH),
+                Set.of(RoadDirection.EAST, RoadDirection.SOUTH),
+                Set.of(RoadDirection.NORTH, RoadDirection.WEST)
+        ).contains(Set.of(direction1, direction2));
+    }
+
+    public ArrayList<Vehicle> getMostPriority(ArrayList<Vehicle> vehicles) {
+        Vehicle vehicle1 = vehicles.getFirst();
+        Vehicle vehicle2 = vehicles.getLast();
+
+        if (!isCollision(vehicles)) {
+            return vehicles;
+        }
+
+        if (isTurningRight(vehicle1.getRoute()) && !isGoingForward(vehicle2.getRoute())) {
+            return new ArrayList<>(List.of(vehicle1));
+        }
+
+        if (isGoingForward(vehicle1.getRoute())) {
+            return new ArrayList<>(List.of(vehicle1));
+        }
+
+        if (isGoingForward(vehicle2.getRoute())) {
+            return new ArrayList<>(List.of(vehicle2));
+        }
+
+        return new ArrayList<>(List.of(vehicle1));
+    }
+
+
+    public boolean isGoingForward(Route route) {
+        return (route.sourceDirection() == route.destinationDirection().opposite());
+    }
+
+    public boolean isTurningRight(Route route) {
+        return (route.sourceDirection() == route.destinationDirection().right());
     }
 }

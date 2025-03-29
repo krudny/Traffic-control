@@ -21,4 +21,13 @@ public enum RoadDirection {
             case WEST -> EAST;
         };
     }
+
+    public RoadDirection right() {
+        return switch (this) {
+            case NORTH -> WEST;
+            case EAST -> NORTH;
+            case SOUTH -> EAST;
+            case WEST -> SOUTH;
+        };
+    }
 }

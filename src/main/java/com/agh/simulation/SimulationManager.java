@@ -10,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,8 +22,9 @@ public class SimulationManager {
 
     public void init() {
         nextStep();
-        intersection.getRoads().forEach(road -> road.getTrafficLight().changeState());
+//        intersection.getRoads().forEach(road -> road.getTrafficLight().changeState());
         nextStep();
+//        intersection.getRoads().forEach(road -> road.getTrafficLight().changeState());
         nextStep();
     }
 
@@ -58,7 +61,7 @@ public class SimulationManager {
         // check which vehicles are going to move somehow
         trafficState.getVehiclesToMove().forEach((direction, vehicles) -> {
             vehicles.forEach(vehicle -> {
-                if (trafficState.getLightStates().get(direction) == TrafficLightSignal.GREEN ) {
+                if (trafficState.getLightStates().get(direction) == TrafficLightSignal.GREEN) {
                     vehicle.setStatus(VehicleStatus.IN_INTERSECTION);
                     LOGGER.info("Vehicle in intersection: {}", vehicle);
                     to_leave.add(vehicle);
@@ -67,13 +70,20 @@ public class SimulationManager {
         });
 
         // move those vehicles
-        if (!intersection.isCollision(to_leave)) {
-            LOGGER.info("Removed: {}", to_leave);
-            to_leave.forEach(vehicle -> {
+        while (!to_leave.isEmpty()) {
+            List<Vehicle> vehiclesToRemove = new ArrayList<>();
+
+            Iterator<Vehicle> iterator = intersection.getMostPriority(to_leave).iterator();
+            while (iterator.hasNext()) {
+                Vehicle vehicle = iterator.next();
                 vehicle.setStatus(VehicleStatus.LEAVING_INTERSECTION);
                 RoadDirection sourceDirection = vehicle.getRoute().sourceDirection();
                 intersection.getRoadByDirection(sourceDirection).getInboundLane().removeNextVehicle();
-            });
+                vehiclesToRemove.add(vehicle);
+                LOGGER.info("Removed: {}", vehicle);
+            }
+
+            to_leave.removeAll(vehiclesToRemove);
         }
     }
 

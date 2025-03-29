@@ -7,6 +7,7 @@ import com.agh.model.trafficLight.TrafficLightSignal;
 import com.agh.model.vehicle.Vehicle;
 import com.agh.model.vehicle.VehicleStatus;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @AllArgsConstructor
+@Getter
 public class SimulationManager {
     private final IIntersection intersection;
     private static final Logger LOGGER = LogManager.getLogger();
@@ -86,5 +88,4 @@ public class SimulationManager {
             to_leave.removeAll(vehiclesToRemove);
         }
     }
-
 }

@@ -7,4 +7,5 @@ public interface IRoad {
     RoadDirection getRoadDirection();
     TrafficLight getTrafficLight();
     Lane getInboundLane();
+    Lane getOutboundLane();
 }

@@ -37,11 +37,11 @@ public class SimulationManager {
         moveVehicles(vehiclesToLeave);
     }
 
-    private void setLights(TrafficState state) {
+    void setLights(TrafficState state) {
         intersection.getRoads().forEach(state::addLightStateForRoad);
     }
 
-    private void selectFirstVehicles(TrafficState state) {
+    void selectFirstVehicles(TrafficState state) {
         intersection.getRoads().forEach(road ->
                 road.getInboundLane().getNextVehicle().ifPresent(vehicle -> {
                     VehicleStatus status = road.getTrafficLight().getCurrentState() == TrafficLightSignal.RED
@@ -58,7 +58,7 @@ public class SimulationManager {
         );
     }
 
-    private void selectWhichAreGoingToMove(TrafficState state, ArrayList<Vehicle> vehiclesToLeave) {
+    void selectWhichAreGoingToMove(TrafficState state, ArrayList<Vehicle> vehiclesToLeave) {
         state.getVehiclesToMove().forEach((direction, vehicles) ->
                 vehicles.stream()
                         .peek(vehicle -> vehicle.setStatus(state.getLightStates().get(direction) == TrafficLightSignal.GREEN
@@ -72,7 +72,7 @@ public class SimulationManager {
         );
     }
 
-    private void moveVehicles(ArrayList<Vehicle> vehiclesToLeave) {
+    void moveVehicles(ArrayList<Vehicle> vehiclesToLeave) {
         List<String> leftVehicles = new ArrayList<>();
 
         while (!vehiclesToLeave.isEmpty()) {

@@ -7,7 +7,7 @@ The goal of this project is to create a simulation of intelligent traffic lights
 ## Key Features
 
 - **Intersection Representation:** The simulation models an intersection with four incoming roads: North, South, East, and West.
-- **Traffic Lights:** The simulation handles standard traffic light cycles (Green, Yellow, Red), as well as special phases (e.g., green arrows) for each incoming road.
+- **Traffic Lights:** The simulation handles standard traffic light cycles for each incoming road.
 - **Conflict Prevention:** The system ensures safety by avoiding conflicts such as two conflicting directions having green lights simultaneously.
 - **Vehicle Tracking:** It keeps track of the number of vehicles waiting at each road.
 

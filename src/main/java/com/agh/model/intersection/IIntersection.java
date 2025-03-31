@@ -2,6 +2,7 @@ package com.agh.model.intersection;
 
 import com.agh.model.road.IRoad;
 import com.agh.model.road.RoadDirection;
+import com.agh.model.trafficLight.TrafficLight;
 import com.agh.model.vehicle.Vehicle;
 
 import java.lang.reflect.Array;
@@ -13,4 +14,5 @@ public interface IIntersection {
     IRoad getRoadByDirection(RoadDirection direction);
     boolean isCollision(List<Vehicle> vehicles);
     ArrayList<Vehicle> getMostPriority(ArrayList<Vehicle> vehicles);
+    List<TrafficLight> getAllTrafficLights();
 }

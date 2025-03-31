@@ -14,6 +14,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 public class OneInboundLaneIntersection implements IIntersection {
@@ -93,5 +94,11 @@ public class OneInboundLaneIntersection implements IIntersection {
 
     public boolean isTurningRight(Route route) {
         return (route.sourceDirection() == route.destinationDirection().right());
+    }
+
+    public List<TrafficLight> getAllTrafficLights() {
+        return getRoads().stream()
+                .map(IRoad::getTrafficLight)
+                .collect(Collectors.toList());
     }
 }

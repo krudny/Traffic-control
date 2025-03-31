@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class CommandProcessor {
-    public void process(SimulationManager manager) throws IOException {
+    public void process(SimulationManager manager, String inputFilePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        CommandList commandList = objectMapper.readValue(new File("in.json"), CommandList.class);
+        CommandList commandList = objectMapper.readValue(new File(inputFilePath), CommandList.class);
 
         for (Command command : commandList.commands()) {
             if (command instanceof AddVehicleCommand addVehicleCommand) {

@@ -1,6 +1,5 @@
 package com.agh.command;
 
-import com.agh.simulation.SimulationManager;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
